@@ -49,10 +49,10 @@ class Pusher
         $this->output->writeln('<info>Done</info>.');
     }
 
-    public function getScannedAndTransformedTranslations()
+    public function getScannedAndTransformedTranslations($untranslated_as_null = false)
     {
         return $this->transformer
             ->setLocales($this->translationsSheet->getSpreadsheet()->getLocales())
-            ->transform($this->reader->scan());
+            ->transform($this->reader->setMainLocale($this->translationsSheet->getSpreadsheet()->getMainLocale())->scan(), $untranslated_as_null);
     }
 }

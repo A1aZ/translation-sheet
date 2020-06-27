@@ -32,6 +32,12 @@ class Reader
     private $locale;
 
     /**
+     * @var string specify main locale that other locales based on.
+     *
+     */
+    private $main_locale;
+
+    /**
      * Reader.
      *
      * @param Application $app
@@ -57,6 +63,19 @@ class Reader
     }
 
     /**
+     * Set reader main locale
+     *
+     * @param $main_locale
+     * @return $this
+     */
+    public function setMainLocale($main_locale)
+    {
+        $this->main_locale = $main_locale;
+
+        return $this;
+    }
+
+    /**
      * Scan modules, app and overridden packages lang
      * and return all defined translations.
      *
@@ -70,6 +89,13 @@ class Reader
 
         // App directory
         $this->scanDirectory($this->app->make('path.lang'));
+
+        // Based on main locale if exist
+        if ($this->getMainLocale()) {
+            $this->translations = $this->translations->groupBy('full_key')->filter(function ($translations) {
+                return $translations->where('locale', $this->getMainLocale())->count() == 1;
+            })->flatten();
+        }
 
         return $this->translations;
     }
@@ -238,5 +264,13 @@ class Reader
     private function isVendorDirectory($directory)
     {
         return basename($directory) === 'vendor';
+    }
+
+    /**
+     * @return string
+     */
+    public function getMainLocale()
+    {
+        return $this->main_locale;
     }
 }

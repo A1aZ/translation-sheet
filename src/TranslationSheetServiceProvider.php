@@ -48,7 +48,9 @@ class TranslationSheetServiceProvider extends ServiceProvider
         $this->app->singleton(Spreadsheet::class, function () {
             return new Spreadsheet(
                 $this->app['config']['translation_sheet.spreadsheetId'],
-                Util::asArray($this->app['config']['translation_sheet.locales'])
+                Util::asArray($this->app['config']['translation_sheet.locales']),
+                null,
+                $this->app['config']['translation_sheet.main_locale']
             );
         });
     }

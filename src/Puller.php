@@ -2,6 +2,7 @@
 
 namespace Nikaia\TranslationSheet;
 
+use Illuminate\Support\Collection;
 use Nikaia\TranslationSheet\Commands\Output;
 use Nikaia\TranslationSheet\Sheet\TranslationsSheet;
 use Nikaia\TranslationSheet\Translation\Writer;
@@ -44,6 +45,19 @@ class Puller
 
         $translations = $this->translationsSheet->readTranslations();
 
-        return Util::keyValues($translations, $header);
+        $translations = Util::keyValues($translations, $header);
+
+        $locales = $this->translationsSheet->getSpreadsheet()->getLocales();
+        $new_translations = new Collection();
+        $translations->keyBy('fullKey')->each(function ($translations, $full_key) use ($locales, &$new_translations) {
+            foreach ($translations as $key => $value) {
+                if (in_array($key, $locales) && $value === $full_key) {
+                    $translations[$key] = null;
+                }
+            }
+            $new_translations[] = $translations;
+        });
+
+        return $new_translations;
     }
 }

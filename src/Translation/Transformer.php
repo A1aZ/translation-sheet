@@ -15,12 +15,12 @@ class Transformer
         return $this;
     }
 
-    public function transform(Collection $translations)
+    public function transform(Collection $translations, $untranslated_as_null = false)
     {
         return $translations
             ->sortBy('locale')
             ->groupBy('full_key')
-            ->map(function ($translation) {
+            ->map(function ($translation) use ($untranslated_as_null) {
                 $firstLocale = $translation->first();
 
                 $row = [];
@@ -37,8 +37,11 @@ class Transformer
                 $localesValues = [];
                 foreach ($this->locales as $locale) {
                     $item = $translation->get($locale);
-                    $value = ! is_null($item) && isset($item->value) ? $item->value : '';
-                    $localesValues [$locale] = $value;
+                    if (! is_null($item) && isset($item->value)) {
+                        $localesValues[$locale] = $item->value;
+                    } else {
+                        $localesValues[$locale] = $untranslated_as_null ? null : "";
+                    }
                 }
 
                 $row = array_merge($row, $localesValues);

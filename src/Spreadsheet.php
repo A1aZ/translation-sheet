@@ -15,17 +15,21 @@ class Spreadsheet
     /** @var array */
     protected $locales = [];
 
+    /** @var string */
+    protected $main_local;
+
     /** @var array */
     protected $translations = [];
 
     /** @var Api */
     protected $api;
 
-    public function __construct($id, $locales, $api = null)
+    public function __construct($id, $locales, $api = null, $main_local = '')
     {
         $this->id = $id;
         $this->locales = $locales;
         $this->api = $api ?: app(Api::class);
+        $this->main_local = $main_local;
     }
 
     public function setLocales($locales)
@@ -70,6 +74,11 @@ class Spreadsheet
     public function getLocalesCount()
     {
         return count($this->locales);
+    }
+
+    public function getMainLocale()
+    {
+        return $this->main_local;
     }
 
     public function getHeader()

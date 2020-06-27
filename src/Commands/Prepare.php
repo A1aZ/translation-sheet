@@ -18,7 +18,7 @@ class Prepare extends Command
     {
         $this->output->writeln('<comment>Scanning local languages files</comment>');
         $translations = Util::keyValues(
-            $pusher->getScannedAndTransformedTranslations(),
+            $pusher->getScannedAndTransformedTranslations(true),
             $spreadsheet->getCamelizedHeader()
         );
 
