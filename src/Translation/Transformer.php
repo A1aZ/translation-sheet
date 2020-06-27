@@ -40,7 +40,7 @@ class Transformer
                     if (! is_null($item) && isset($item->value)) {
                         $localesValues[$locale] = $item->value;
                     } else {
-                        $localesValues[$locale] = $untranslated_as_null ? null : "";
+                        $localesValues[$locale] = $untranslated_as_null ? null : $row['full_key'];
                     }
                 }
 
