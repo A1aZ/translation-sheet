@@ -31,6 +31,12 @@ class Pusher
 
     public function push()
     {
+        if ($this->translationsSheet->isTranslationsLocked()) {
+            $this->output->writeln('<info>Spreadsheet LOCKED!</info>');
+
+            return;
+        }
+
         $this->output->writeln('<comment>Scanning languages files</comment>');
         $translations = $this->getScannedAndTransformedTranslations();
 
